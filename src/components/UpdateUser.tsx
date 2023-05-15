@@ -6,25 +6,22 @@ import { User } from "../models/user";
 import * as Options from "../utils/options";
 import { ConflictError, UnauthorizedError } from "../errors/http_errors";
 import Dropzone from "react-dropzone";
+import { useSelector } from "react-redux";
+import { usersState } from "../state";
 
 interface modalProps {
   onDismiss: () => void;
-  // onSignUpSuccesful: (user: User) => void;
 }
 
-const CreateUser = ({ onDismiss }: modalProps) => {
+const UpdateUser = ({ onDismiss }: modalProps) => {
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErroMessage] = useState("");
-
+  const user: User | null = useSelector((state: usersState) => state.user);
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm();
-
-  // interface UserInput{
-  //   [key: string]: any;
-  // }
+  } = useForm({defaultValues: {name: user?.name, biography: user?.biography, picture: []}});
 
   async function onSubmit(input: Record<string, any>) {
     try {
@@ -84,7 +81,6 @@ const CreateUser = ({ onDismiss }: modalProps) => {
                 <Input
                   label="Name"
                   type="text"
-                  placeholder="John Doe"
                   name="name"
                   register={register}
                   options={Options.optionName}
@@ -94,46 +90,18 @@ const CreateUser = ({ onDismiss }: modalProps) => {
                     {errors.name.message}
                   </p>
                 )}
-
-                <Input
-                  label="Email"
-                  type="email"
-                  placeholder="name@email.com"
-                  name="email"
-                  register={register}
-                  options={Options.optionEmail}
+                <label className="mb-2 text-sm font-medium text-gray-700">
+                  Biography
+                </label>
+                <textarea
+                  {...register("biography")}
+                  id="message"
+                  rows={4}
+                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "
                 />
-                {errors.email && (
-                  <p className="text-xs italic text-red-500 pb-5">
-                    {errors.email.message}
-                  </p>
-                )}
-
-                <Input
-                  label="User"
-                  type="text"
-                  placeholder="Username"
-                  name="user"
-                  register={register}
-                  options={Options.optionUserName}
-                />
-                {errors.user && (
-                  <p className="text-xs italic text-red-500 pb-5">
-                    {errors.user.message}
-                  </p>
-                )}
-
-                <Input
-                  label="Password"
-                  type="password"
-                  placeholder="***************"
-                  name="password"
-                  register={register}
-                  options={Options.optionPassword}
-                />
-                {errors.password && (
-                  <p className="text-xs italic text-red-500 pb-5">
-                    {errors.password.message}
+                {errors.biography && (
+                  <p className="text-xs italic text-red-500 pb-1">
+                    {errors.biography.message}
                   </p>
                 )}
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -169,7 +137,7 @@ const CreateUser = ({ onDismiss }: modalProps) => {
                   className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="submit"
                 >
-                  Save Changes
+                  Update profile
                 </button>
               </div>
             </form>
@@ -181,4 +149,4 @@ const CreateUser = ({ onDismiss }: modalProps) => {
   );
 };
 
-export default CreateUser;
+export default UpdateUser;

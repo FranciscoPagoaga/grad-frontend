@@ -7,8 +7,8 @@ export interface User {
     following: [],
     followers: [],
     biography?: string,
-    profilephoto: string,
-    enable: boolean,
+    picturePath?: string,
+    enabled: boolean,
     createdAt: string,
     updatedAt: string,
 }

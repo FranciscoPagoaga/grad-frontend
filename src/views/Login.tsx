@@ -4,47 +4,18 @@ import { User } from "../models/user";
 import axios from "axios";
 import * as UsersApi from  "../network/users_api";
 
+import design from "../assets/landingpage.png";
 
 
 const Login = () => {
   const [user, setUser] = useState<User[]>([]);
-
-  useEffect(() => {
-    async function loadUsers() {
-      try {
-        await axios
-          .get("/api/users")
-          .then((response) => {
-            setUser(response.data);
-          })
-          .catch((error) => console.error(`Error: ${error}`));
-      } catch (error) {
-        console.error(error);
-        alert(error);
-      }
-    }
-    loadUsers();
-    console.log(user);
-  }, []);
-
-  const backgroundImage = "url('src/assets/landingpage.png')";
   return (
     <div
-      style={{
-        backgroundImage,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        width: "100%",
-      }}
-      className="flex flex-row h-screen w-screen p-8"
+      className="flex flex-row h-screen w-screen p-8 justify-center bg-gradient-to-r from-sky-500 to-indigo-500"
     >
-      <div className="basis-1/2">
-        <h1 className="">Bienvenido</h1>
-        <img className="h-50"></img>
-      </div>
-      <div className="basis-1/2 flex-start pt-20">
+      <div className="flex flex-row align-middle  pt-20">
         <LoginForm />
+        <img src={design} className="h-96 max-h-96 rounded-r-lg"/>
       </div>
     </div>
   );

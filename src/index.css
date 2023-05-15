@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.icon {
+    justify-self: end;
+    color: #838283;
+    cursor: pointer;
+}
+
+
+
+.icon-like:hover {
+    cursor: pointer;
+    
+}
