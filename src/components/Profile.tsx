@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import logo from "../assets/logo.png";
 import { FaUserEdit } from "react-icons/fa";
 import { IconContext } from "react-icons";
 import { useNavigate } from "react-router-dom";
