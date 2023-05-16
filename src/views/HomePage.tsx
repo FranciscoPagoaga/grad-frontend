@@ -35,7 +35,6 @@ const HomePage = () => {
 
   return (
     <div className="bg-gray-100">
-      {showModal ? <UpdateUser onDismiss={() => setShowModal(false)} /> : null}
       <Navbar />
       <div className="flex flex-row h-screen p-8 gap-16 justify-center">
         <div className="basis-1/4 h-fit">

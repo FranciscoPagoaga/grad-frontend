@@ -4,10 +4,9 @@ import { useForm } from "react-hook-form";
 import * as UsersApi from "../network/users_api";
 import { User } from "../models/user";
 import * as Options from "../utils/options";
-import { ConflictError, UnauthorizedError } from "../errors/http_errors";
-import Dropzone from "react-dropzone";
-import { useSelector } from "react-redux";
-import { usersState } from "../state";
+import { ConflictError } from "../errors/http_errors";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser, usersState } from "../state";
 
 interface modalProps {
   onDismiss: () => void;
@@ -17,6 +16,8 @@ const UpdateUser = ({ onDismiss }: modalProps) => {
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErroMessage] = useState("");
   const user: User | null = useSelector((state: usersState) => state.user);
+  const token: string | null = useSelector((state: usersState) => state.token);
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
@@ -26,7 +27,6 @@ const UpdateUser = ({ onDismiss }: modalProps) => {
   async function onSubmit(input: Record<string, any>) {
     try {
       const data = new FormData();
-      console.log(input);
       let pictureName = "";
       for (const [key, value] of Object.entries(input)) {
         if (key === "picture") {
@@ -42,13 +42,10 @@ const UpdateUser = ({ onDismiss }: modalProps) => {
       }
       data.append("picturePath", pictureName);
 
-      // for (const value in input){
-      //   data.append(value, input[value]);
-      // }
-
-      const userResponse = await UsersApi.signUp(data);
-
-      alert("User created succesfully");
+      const userResponse = await UsersApi.updateUser(user?._id || "",token,data);
+      console.log(userResponse);
+      dispatch(setUser({user: userResponse}));
+      onDismiss()
     } catch (error) {
       if (error instanceof ConflictError) {
         setHasError(true);

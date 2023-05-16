@@ -58,6 +58,65 @@ export async function signUp(user: FormData): Promise<User> {
     });
 }
 
+export async function updateUser(
+  userId: string,
+  token: string | null,
+  user: FormData
+): Promise<User> {
+  return await axios
+    .patch(`/api/users/${userId}`, user, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      const errorMessage = error.response.data.error;
+      if (error.response.status === 409) {
+        throw new ConflictError(errorMessage);
+      } else {
+        throw Error(error);
+      }
+    });
+}
+
+export async function getFollowers(userId: string, token: string | null): Promise<User[]> {
+  return await axios
+    .get(`/api/users/${userId}/followers`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      const errorMessage = error.response.data.error;
+      if (error.response.status === 409) {
+        throw new ConflictError(errorMessage);
+      } else {
+        throw Error(error);
+      }
+    });
+}
+
+export async function getFollowing(userId: string, token: string | null): Promise<User[]> {
+  return await axios
+    .get(`/api/users/${userId}/following`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      const errorMessage = error.response.data.error;
+      if (error.response.status === 409) {
+        throw new ConflictError(errorMessage);
+      } else {
+        throw Error(error);
+      }
+    });
+}
+
+
 //Post related Functions
 export async function createPost(
   post: FormData,
@@ -96,20 +155,4 @@ export async function likePost(
     { headers: { Authorization: `Bearer ${token}` } }
   );
   return response.data;
-}
-
-export async function updateUser(user: FormData): Promise<User> {
-  return await axios
-    .post("/api/auth/signup", user)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      const errorMessage = error.response.data.error;
-      if (error.response.status === 409) {
-        throw new ConflictError(errorMessage);
-      } else {
-        throw Error(error);
-      }
-    });
 }
