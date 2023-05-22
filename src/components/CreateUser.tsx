@@ -29,14 +29,12 @@ const CreateUser = ({ onDismiss }: modalProps) => {
   async function onSubmit(input: Record<string, any>) {
     try {
       const data = new FormData();
-      console.log(input);
       let pictureName = "";
       for (const [key, value] of Object.entries(input)) {
         if (key === "picture") {
           if (value[0] !== undefined) {
             const pictureFile = value[0] as File;
             pictureName = pictureFile.name;
-            console.log(pictureFile);
             data.append(key, pictureFile);
           }
         } else {

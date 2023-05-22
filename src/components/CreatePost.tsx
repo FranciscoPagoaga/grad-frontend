@@ -4,7 +4,7 @@ import { BsFillImageFill } from "react-icons/bs";
 import { useForm } from "react-hook-form";
 import { IconContext } from "react-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { setPost, setPosts, usersState } from "../state";
+import { setPosts, usersState } from "../state";
 import { User } from "../models/user";
 import * as UsersApi from  "../network/users_api";
 
@@ -22,7 +22,6 @@ const CreatePost = () => {
   async function onSubmit(input: Record<string, any>) {
     try {
       const data = new FormData();
-      console.log(data);
       let pictureName = "";
       for (const [key, value] of Object.entries(input)) {
         if (key === "picture") {
@@ -47,7 +46,6 @@ const CreatePost = () => {
       const userResponse = await UsersApi.createPost(data, token);
 
       dispatch(setPosts({posts: userResponse}));
-      console.log(userResponse);
       alert("User created succesfully");
     } catch (error) {
       console.error(error);
@@ -61,7 +59,7 @@ const CreatePost = () => {
           Create a Post
         </label>
         <textarea
-          {...register("content", { required: "Please add text to your post" })}
+          {...register("content", { required: "Please add text to your post", maxLength:{value: 200, message: "Maximum 200 characters for a post"}  })}
           id="message"
           rows={4}
           className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "

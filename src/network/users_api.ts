@@ -14,6 +14,22 @@ export async function fetchUser(
   return response.data;
 }
 
+export async function fetchUserByName(
+  userId: string,
+  token: string | null
+): Promise<User> {
+  return await axios
+    .get(`/api/users/${userId}/user`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw Error(error);
+    });
+}
+
 export interface LoginCredentials {
   user: string;
   password: string;
@@ -80,7 +96,10 @@ export async function updateUser(
     });
 }
 
-export async function getFollowers(userId: string, token: string | null): Promise<User[]> {
+export async function getFollowers(
+  userId: string,
+  token: string | null
+): Promise<User[]> {
   return await axios
     .get(`/api/users/${userId}/followers`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -98,7 +117,10 @@ export async function getFollowers(userId: string, token: string | null): Promis
     });
 }
 
-export async function getFollowing(userId: string, token: string | null): Promise<User[]> {
+export async function getFollowing(
+  userId: string,
+  token: string | null
+): Promise<User[]> {
   return await axios
     .get(`/api/users/${userId}/following`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -115,7 +137,6 @@ export async function getFollowing(userId: string, token: string | null): Promis
       }
     });
 }
-
 
 //Post related Functions
 export async function createPost(
@@ -155,4 +176,57 @@ export async function likePost(
     { headers: { Authorization: `Bearer ${token}` } }
   );
   return response.data;
+}
+
+export async function getUserPosts(
+  userId: string,
+  token: string | null
+): Promise<PostModel[]> {
+  return await axios
+    .get(`/api/posts/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw Error(error);
+    });
+}
+
+export async function handleFollow(  userId: string,
+  followingUserId: string,
+  token: string | null
+): Promise<User> {
+  return await axios
+    .patch(`/api/users/${userId}/${followingUserId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw Error(error);
+    });
+}
+
+export interface watchtimeBody{
+  userId: string,
+  watchtime: number
+}
+
+export async function updateWatchtime(  userId: string,
+  body: watchtimeBody,
+  token: string | null
+): Promise<User> {
+  return await axios
+    .patch(`/api/posts/${userId}/watchtime`, body, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw Error(error);
+    });
 }

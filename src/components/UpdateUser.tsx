@@ -6,7 +6,7 @@ import { User } from "../models/user";
 import * as Options from "../utils/options";
 import { ConflictError } from "../errors/http_errors";
 import { useSelector, useDispatch } from "react-redux";
-import { setUser, usersState } from "../state";
+import { updateUser, usersState } from "../state";
 
 interface modalProps {
   onDismiss: () => void;
@@ -33,7 +33,6 @@ const UpdateUser = ({ onDismiss }: modalProps) => {
           if (value[0] !== undefined) {
             const pictureFile = value[0] as File;
             pictureName = pictureFile.name;
-            console.log(pictureFile);
             data.append(key, pictureFile);
           }
         } else {
@@ -43,8 +42,7 @@ const UpdateUser = ({ onDismiss }: modalProps) => {
       data.append("picturePath", pictureName);
 
       const userResponse = await UsersApi.updateUser(user?._id || "",token,data);
-      console.log(userResponse);
-      dispatch(setUser({user: userResponse}));
+      dispatch(updateUser({user: userResponse}));
       onDismiss()
     } catch (error) {
       if (error instanceof ConflictError) {

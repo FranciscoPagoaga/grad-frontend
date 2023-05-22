@@ -22,8 +22,6 @@ const UserList = ({ onDismiss, listType, userId }: modalProps) => {
     const followingResponse = await getFollowing(userId, token);
     setFollowing(followingResponse);
 
-    console.log("following " + followers);
-    console.log(following);
   }
 
   useEffect(() => {
@@ -55,7 +53,7 @@ const UserList = ({ onDismiss, listType, userId }: modalProps) => {
               {listType
                 ? following.map((user) => (
                     <UserCard
-                      userId={userId || ""}
+                      userId={user._id}
                       userProfilePicture={user.picturePath}
                       biography={user.biography}
                       name={user.name}
@@ -64,7 +62,7 @@ const UserList = ({ onDismiss, listType, userId }: modalProps) => {
                   ))
                 : followers.map((user) => (
                     <UserCard
-                      userId={userId || ""}
+                      userId={user._id}
                       userProfilePicture={user.picturePath}
                       biography={user.biography}
                       name={user.name}

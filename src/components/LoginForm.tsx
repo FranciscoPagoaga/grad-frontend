@@ -27,7 +27,6 @@ const LoginForm = () => {
   async function onSubmit(credentials: LoginCredentials) {
     setHasError(false);
     try {
-      console.log(credentials);
       const loggedIn = await UsersApi.login(credentials);
       alert("logged in");
       if(loggedIn){
