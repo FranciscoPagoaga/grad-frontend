@@ -2,7 +2,7 @@ import React, { useState, useRef, useMemo, useEffect } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { IconContext } from "react-icons";
 import { likePost, updateWatchtime, watchtimeBody } from "../network/users_api";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { usersState } from "../state";
 import profile from "../assets/profile.webp";
 import { useIntersection } from "../utils/useIntersection";
@@ -17,16 +17,19 @@ const Post = (props: {
   userProfilePicture: string;
   content: string;
   isLiked: boolean;
+  likes: number;
 }) => {
   const ref = useRef();
   const inViewport = useIntersection(ref, "0px");
-
+  
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const token: string | null = useSelector((state: usersState) => state.token);
   const [isLiked, setIsLiked] = useState<boolean>(props.isLiked);
   const [seconds, setSeconds] = useState<number>(0);
   const [isActive, setIsActive] = useState<boolean>(true);
+  const [likes, setLikes] = useState<number>(props.likes);
 
   async function likePostButton() {
     const response = await likePost(
@@ -34,6 +37,11 @@ const Post = (props: {
       props.postId || "",
       token
     );
+    if(isLiked){
+      setLikes(likes - 1);
+    }else{
+      setLikes(likes + 1);
+    }
     setIsLiked(!isLiked);
   }
 
@@ -100,10 +108,10 @@ const Post = (props: {
         <div className="px-5 break-normal">
           <span className="text-justify">{props.content}</span>
         </div>
-        <div onClick={likePostButton} className="pl-5 h-7">
+        <div  className="flex flex-row w-full pl-5 h-7">
           {isLiked ? (
-            <IconContext.Provider value={{ size: "1.1rem", color: "Red" }}>
-              <AiFillHeart />
+            <IconContext.Provider  value={{ size: "1.1rem", color: "Red" }}>
+              <AiFillHeart onClick={likePostButton}/>
             </IconContext.Provider>
           ) : (
             <IconContext.Provider
@@ -113,9 +121,10 @@ const Post = (props: {
                 className: "icon-like",
               }}
             >
-              <AiOutlineHeart />
+              <AiOutlineHeart onClick={likePostButton}/>
             </IconContext.Provider>
           )}
+          <span className="text-xs">{likes}</span>
         </div>
       </div>
     </div>

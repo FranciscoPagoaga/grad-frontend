@@ -18,14 +18,18 @@ const HomePage = () => {
   if(user){
     userId = user._id
   }
+
   const posts: PostModel[] | null = useSelector((state: usersState) => state.posts);
 
   async function loadFeed() {
     const response = await fetchFeed(user?._id || "", token);
     dispatch(setPosts({posts: response}));
+    
+    console.log("calls the feed");
   }
 
   useEffect(() => {
+    posts.map((post, i ) => {console.log(i + ") Is liked: " + (post.likes[userId] || false) + " likes: " + Object.keys(post.likes).length)})
     loadFeed();
   }, []);
 
@@ -38,11 +42,10 @@ const HomePage = () => {
         </div>
         <div className="basis-2/5">
           <CreatePost />
-          <div className="pt-10 overflow-auto max-h-96">
+          <div className="pt-10 overflow-y-auto  max-h-96">
             {posts.map((post, i) => (
-              <div className="pb-5">
+              <div key={i} className="pb-5">
                 <Post
-                  key={i}
                   postUserId={post.userId}
                   userId={user?._id}
                   postId={post._id}
@@ -51,6 +54,7 @@ const HomePage = () => {
                   userProfilePicture={post.userPicturePath}
                   content={post.content}
                   isLiked= {post.likes[userId] || false}
+                  likes={Object.keys(post.likes).length}
                 />
               </div>
             ))}

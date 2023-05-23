@@ -1,9 +1,9 @@
 import React from "react";
 import Input from "./Input";
-import { AiOutlineSearch } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogout } from "../state";
+import SearchBar from "./SearchBar";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -31,16 +31,7 @@ const Navbar = () => {
               >
                 Signout
               </a>
-              <div className="relative flex">
-                <input
-                  type="text"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100"
-                  placeholder="Username"
-                />
-                <div className="absolute inset-y-0 right-0 flex items-center px-2">
-                  <AiOutlineSearch className="text-gray-400" />
-                </div>
-              </div>
+              <SearchBar />
             </div>
           </div>
         </div>

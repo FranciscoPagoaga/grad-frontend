@@ -1,5 +1,5 @@
 import { User } from "../models/user";
-import axios, { Axios, AxiosError, AxiosResponse } from "axios";
+import axios from "axios";
 import { ConflictError, UnauthorizedError } from "../errors/http_errors";
 import { PostModel } from "../models/post";
 
@@ -194,7 +194,8 @@ export async function getUserPosts(
     });
 }
 
-export async function handleFollow(  userId: string,
+export async function handleFollow(
+  userId: string,
   followingUserId: string,
   token: string | null
 ): Promise<User> {
@@ -210,12 +211,13 @@ export async function handleFollow(  userId: string,
     });
 }
 
-export interface watchtimeBody{
-  userId: string,
-  watchtime: number
+export interface watchtimeBody {
+  userId: string;
+  watchtime: number;
 }
 
-export async function updateWatchtime(  userId: string,
+export async function updateWatchtime(
+  userId: string,
   body: watchtimeBody,
   token: string | null
 ): Promise<User> {
@@ -223,6 +225,25 @@ export async function updateWatchtime(  userId: string,
     .patch(`/api/posts/${userId}/watchtime`, body, {
       headers: { Authorization: `Bearer ${token}` },
     })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw Error(error);
+    });
+}
+
+export async function searchUser(
+  user: string,
+  token: string | null
+): Promise<User[]> {
+  return await axios
+    .get(
+      `/api/users/search/${user}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
     .then((response) => {
       return response.data;
     })

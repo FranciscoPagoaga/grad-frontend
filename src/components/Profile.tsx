@@ -21,7 +21,7 @@ const Profile = (props: { userId: string | undefined }) => {
   const [showUserModal, setShowUserModal] = useState<boolean>(false);
   const [listType, setListType] = useState<boolean>(false);
   const [isFollowed, setIsFollowed] = useState<boolean>(
-    sessionUser?.following.includes(props.userId || "")
+    sessionUser?.following.includes(props.userId || "") || false
   );
 
   function mountFollowing() {
@@ -37,7 +37,6 @@ const Profile = (props: { userId: string | undefined }) => {
   async function handleUserFollow() {
     await handleFollow(sessionUser?._id || "", user?._id || "", token);
     const response: User = await fetchUser(sessionUser?._id || "", token);
-
     dispatch(
       updateUser({
         user: response,
@@ -47,14 +46,16 @@ const Profile = (props: { userId: string | undefined }) => {
   }
 
   async function loadUser() {
+    console.log(props.userId)
     const response = await fetchUser(props.userId || "", token);
+    console.log(response);
     setUser(response);
   }
 
   useEffect(() => {
     loadUser();
-    setIsFollowed(sessionUser?.following.includes(props.userId || ""));
-  }, [props.userId]);
+    setIsFollowed(sessionUser?.following.includes(props.userId || "")|| false);
+  }, [showUpdateModal]);
 
   return (
     <div className="flex flex-col h-full shadow-xl pt-5  bg-white rounded-lg items-start">

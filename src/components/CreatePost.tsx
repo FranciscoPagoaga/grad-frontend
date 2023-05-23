@@ -6,17 +6,17 @@ import { IconContext } from "react-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts, usersState } from "../state";
 import { User } from "../models/user";
-import * as UsersApi from  "../network/users_api";
-
+import * as UsersApi from "../network/users_api";
 
 const CreatePost = () => {
   const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm();
-  const user:  User| null = useSelector((state: usersState) => state.user);
+  const user: User | null = useSelector((state: usersState) => state.user);
   const token: string | null = useSelector((state: usersState) => state.token);
 
   async function onSubmit(input: Record<string, any>) {
@@ -35,18 +35,18 @@ const CreatePost = () => {
         }
       }
 
-      if(!user){
-        throw Error
+      if (!user) {
+        throw Error;
       }
-      
-      data.append("userId", user._id );
-      data.append("picturePath", pictureName);
 
+      data.append("userId", user._id);
+      data.append("picturePath", pictureName);
 
       const userResponse = await UsersApi.createPost(data, token);
 
-      dispatch(setPosts({posts: userResponse}));
-      alert("User created succesfully");
+      dispatch(setPosts({ posts: userResponse }));
+      setValue("content", "");
+      setValue("picture", []);
     } catch (error) {
       console.error(error);
     }
@@ -59,7 +59,13 @@ const CreatePost = () => {
           Create a Post
         </label>
         <textarea
-          {...register("content", { required: "Please add text to your post", maxLength:{value: 200, message: "Maximum 200 characters for a post"}  })}
+          {...register("content", {
+            required: "Please add text to your post",
+            maxLength: {
+              value: 200,
+              message: "Maximum 200 characters for a post",
+            },
+          })}
           id="message"
           rows={4}
           className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "
@@ -84,11 +90,19 @@ const CreatePost = () => {
               <span className="self-center text-sm pl-1 text-gray-500">
                 Image
               </span>
-              <input {...register("picture")} type="file" id="file-upload" className="hidden" />
+              <input
+                {...register("picture")}
+                type="file"
+                id="file-upload"
+                className="hidden"
+              />
               <span>{}</span>
             </div>
           </label>
-          <button type="submit" className="ml-auto px-4 py-1 rounded-full text-sm font-medium text-white bg-blue-500 border border-transparent shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-blue-500 focus:border-blue-500 active:bg-blue-700">
+          <button
+            type="submit"
+            className="ml-auto px-4 py-1 rounded-full text-sm font-medium text-white bg-blue-500 border border-transparent shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-blue-500 focus:border-blue-500 active:bg-blue-700"
+          >
             Post
           </button>
         </div>
