@@ -18,7 +18,6 @@ const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { userId } = useParams();
-  console.log(userId);
   const token: string | null = useSelector((state: usersState) => state.token);
 
   async function fetchData() {
@@ -54,6 +53,8 @@ const ProfilePage = () => {
                     content={post.content}
                     isLiked={post.likes[sessionUser?._id || ""] || false}
                     likes={Object.keys(post.likes).length}
+                    isPagePost={false}
+                    rate={post?.rating[user?._id || ""] || 0}
                   />
                 </div>
               ))

@@ -1,5 +1,3 @@
-import React from "react";
-import Button from "./Button";
 import { BsFillImageFill } from "react-icons/bs";
 import { useForm } from "react-hook-form";
 import { IconContext } from "react-icons";
@@ -42,9 +40,9 @@ const CreatePost = () => {
       data.append("userId", user._id);
       data.append("picturePath", pictureName);
 
-      const userResponse = await UsersApi.createPost(data, token);
-
-      dispatch(setPosts({ posts: userResponse }));
+      await UsersApi.createPost(data, token);
+      const response = await UsersApi.fetchFeed(user._id, token);
+      dispatch(setPosts({ posts: response }));
       setValue("content", "");
       setValue("picture", []);
     } catch (error) {
@@ -67,7 +65,7 @@ const CreatePost = () => {
             },
           })}
           id="message"
-          rows={4}
+          rows={2}
           className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "
           placeholder="Write your thoughts here..."
         ></textarea>
@@ -96,7 +94,6 @@ const CreatePost = () => {
                 id="file-upload"
                 className="hidden"
               />
-              <span>{}</span>
             </div>
           </label>
           <button
@@ -106,7 +103,6 @@ const CreatePost = () => {
             Post
           </button>
         </div>
-        <div className="pt-5 justify-self-end"></div>
       </form>
     </div>
   );

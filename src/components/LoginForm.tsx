@@ -28,7 +28,6 @@ const LoginForm = () => {
     setHasError(false);
     try {
       const loggedIn = await UsersApi.login(credentials);
-      alert("logged in");
       if(loggedIn){
         dispatch(setLogin({
           user: loggedIn.user,

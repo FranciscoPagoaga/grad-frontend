@@ -1,10 +1,3 @@
-interface Comment {
-  commentId: string;
-  userId: string;
-  content: string;
-  enabled: boolean;
-  picturePath: string;
-}
 
 export interface PostModel {
   _id: string;
@@ -13,8 +6,8 @@ export interface PostModel {
   user: string;
   content: string;
   enabled: boolean;
-  comments: Comment[];
   likes: Record<string, boolean>;
+  rating: Record<string, number>;
   picturePath: string;
   userPicturePath: string;
   watchtime: [];

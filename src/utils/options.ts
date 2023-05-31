@@ -63,3 +63,10 @@ export const optionPassword = {
         message: "This field must have at least 8 characters"
     },
 }
+
+export const phoneNumber = {
+    pattern: {
+        value: /^[+]\d{1,3}-\d{4,14}$/,
+        message: "It must be in phone number format"
+    }
+}

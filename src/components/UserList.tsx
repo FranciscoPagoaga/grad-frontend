@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import UserCard from "./UserCard";
 import { User } from "../models/user";
 import { getFollowing, getFollowers } from "../network/users_api";

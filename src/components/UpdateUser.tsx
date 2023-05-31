@@ -6,7 +6,7 @@ import { User } from "../models/user";
 import * as Options from "../utils/options";
 import { ConflictError } from "../errors/http_errors";
 import { useSelector, useDispatch } from "react-redux";
-import { updateUser, usersState } from "../state";
+import { updateUser, usersState, setPosts } from "../state";
 
 interface modalProps {
   onDismiss: () => void;
@@ -22,7 +22,14 @@ const UpdateUser = ({ onDismiss }: modalProps) => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm({defaultValues: {name: user?.name, biography: user?.biography, picture: []}});
+  } = useForm({
+    defaultValues: {
+      name: user?.name,
+      biography: user?.biography,
+      picture: [],
+      phoneNumber: user?.phoneNumber,
+    },
+  });
 
   async function onSubmit(input: Record<string, any>) {
     try {
@@ -41,9 +48,16 @@ const UpdateUser = ({ onDismiss }: modalProps) => {
       }
       data.append("picturePath", pictureName);
 
-      const userResponse = await UsersApi.updateUser(user?._id || "",token,data);
-      dispatch(updateUser({user: userResponse}));
-      onDismiss()
+      const userResponse = await UsersApi.updateUser(
+        user?._id || "",
+        token,
+        data
+      );
+      const feedResponse = await UsersApi.fetchFeed(user?._id || "", token);
+      
+      dispatch(setPosts({posts: feedResponse}));
+      dispatch(updateUser({ user: userResponse }));
+      onDismiss();
     } catch (error) {
       if (error instanceof ConflictError) {
         setHasError(true);
@@ -61,7 +75,7 @@ const UpdateUser = ({ onDismiss }: modalProps) => {
             {/*header*/}
             <form id="addUserForm" onSubmit={handleSubmit(onSubmit)}>
               <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                <h3 className="text-3xl font-semibold">Create Account</h3>
+                <h3 className="text-3xl font-semibold">Update Account</h3>
                 <button
                   className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                   onClick={onDismiss}
@@ -97,6 +111,18 @@ const UpdateUser = ({ onDismiss }: modalProps) => {
                 {errors.biography && (
                   <p className="text-xs italic text-red-500 pb-1">
                     {errors.biography.message}
+                  </p>
+                )}
+                <Input
+                  label="Phone Number"
+                  type="text"
+                  name="phoneNumber"
+                  register={register}
+                  options={Options.phoneNumber}
+                />
+                {errors.phoneNumber && (
+                  <p className="text-xs italic text-red-500 pb-5">
+                    {errors.phoneNumber.message}
                   </p>
                 )}
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">

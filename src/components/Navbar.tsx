@@ -26,7 +26,7 @@ const Navbar = () => {
           <div className="hidden md:block">
             <div className="ml-4 flex items-center space-x-4">
               <a
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium hover:cursor-pointer"
                 onClick={signout}
               >
                 Signout

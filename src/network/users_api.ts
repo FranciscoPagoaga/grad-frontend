@@ -2,6 +2,7 @@ import { User } from "../models/user";
 import axios from "axios";
 import { ConflictError, UnauthorizedError } from "../errors/http_errors";
 import { PostModel } from "../models/post";
+import { CommentModel } from "../models/comment";
 
 //User related Functions
 export async function fetchUser(
@@ -238,12 +239,85 @@ export async function searchUser(
   token: string | null
 ): Promise<User[]> {
   return await axios
-    .get(
-      `/api/users/search/${user}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    )
+    .get(`/api/users/search/${user}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw Error(error);
+    });
+}
+
+export interface CreateCommentBody{
+  userId: string;
+  postId: string;
+  content: string;
+}
+
+export async function createComment(
+  body: CreateCommentBody,
+  token: string,
+){
+  return await axios
+    .post(`/api/posts/comment`, body, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw Error(error);
+    });
+}
+
+export async function getComments(
+  postId: string,
+  token: string | null
+): Promise<CommentModel[]> {
+  return await axios
+    .get(`/api/posts/${postId}/comments`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw Error(error);
+    });
+}
+
+export async function getPost(
+  postId: string,
+  token: string | null
+): Promise<PostModel> {
+  return await axios
+    .get(`/api/posts/${postId}/post`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw Error(error);
+    });
+}
+
+export interface ratingBody{
+  userId: string,
+  rating: number
+}
+
+export async function setRate(
+  postId: string,
+  body: ratingBody,
+  token: string | null
+): Promise<PostModel> {
+  return await axios
+    .patch(`/api/posts/${postId}/rate`, body, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
     .then((response) => {
       return response.data;
     })

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaUserEdit } from "react-icons/fa";
+import { AiOutlineWhatsApp } from "react-icons/ai";
 import { IconContext } from "react-icons";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser, handleFollow } from "../network/users_api";
 import { usersState, updateUser } from "../state";
@@ -46,7 +46,7 @@ const Profile = (props: { userId: string | undefined }) => {
   }
 
   async function loadUser() {
-    console.log(props.userId)
+    console.log(props.userId);
     const response = await fetchUser(props.userId || "", token);
     console.log(response);
     setUser(response);
@@ -54,7 +54,7 @@ const Profile = (props: { userId: string | undefined }) => {
 
   useEffect(() => {
     loadUser();
-    setIsFollowed(sessionUser?.following.includes(props.userId || "")|| false);
+    setIsFollowed(sessionUser?.following.includes(props.userId || "") || false);
   }, [showUpdateModal]);
 
   return (
@@ -111,7 +111,15 @@ const Profile = (props: { userId: string | undefined }) => {
           </button>
         )}
       </div>
-      <p className="p-5 w-full text-justify border-b-2">{user?.biography}</p>
+      <div className="p-5 w-full text-justify border-b-2">
+        <p className="pb-5">{user?.biography}</p>
+        {user?.phoneNumber ? (
+          <div className="flex flex-row w-full">
+            <AiOutlineWhatsApp className={"w-5 h-5 mr-2"} />
+            <span className="text-sm">{user.phoneNumber}</span>
+          </div>
+        ) : null}
+      </div>
       <div className="pl-5 w-full">
         <div
           className="hover:underline hover:cursor-pointer"

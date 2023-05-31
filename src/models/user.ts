@@ -7,6 +7,7 @@ export interface User {
     following: string[],
     followers: string[],
     biography: string,
+    phoneNumber: string,
     picturePath: string,
     enabled: boolean,
     createdAt: string,

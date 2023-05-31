@@ -47,9 +47,9 @@ const CreateUser = ({ onDismiss }: modalProps) => {
       //   data.append(value, input[value]);
       // }
 
-      const userResponse = await UsersApi.signUp(data);
-
-      alert("User created succesfully");
+      await UsersApi.signUp(data);
+      
+      onDismiss();
     } catch (error) {
       if (error instanceof ConflictError) {
         setHasError(true);
