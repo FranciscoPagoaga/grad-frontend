@@ -2,7 +2,13 @@ import { useState, useRef, useEffect } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { FaStar } from "react-icons/fa";
 import { IconContext } from "react-icons";
-import { likePost, updateWatchtime, watchtimeBody, setRate, ratingBody } from "../network/users_api";
+import {
+  likePost,
+  updateWatchtime,
+  watchtimeBody,
+  setRate,
+  ratingBody,
+} from "../network/users_api";
 import { useSelector } from "react-redux";
 import { usersState } from "../state";
 import profile from "../assets/profile.webp";
@@ -22,6 +28,7 @@ const Post = (props: {
   likes: number;
   isPagePost: boolean;
   rate: number;
+  isRecommended: boolean;
 }) => {
   const ref = useRef();
   const inViewport = useIntersection(ref, "0px");
@@ -52,11 +59,11 @@ const Post = (props: {
     return stars;
   }
 
-  function handleStarClick(i: number){
-    const body: ratingBody =  {
+  function handleStarClick(i: number) {
+    const body: ratingBody = {
       rating: i,
       userId: props.userId || "",
-    }
+    };
     setRate(props.postId, body, token);
     setRating(i);
   }
@@ -109,69 +116,72 @@ const Post = (props: {
 
   return (
     <div
-      className="flex flex-row bg-white pt-4 pb-4 rounded-md hover:bg-gray-"
+      className="flex flex-col bg-white  py-2 rounded-md hover:bg-gray-"
       ref={ref}
     >
-      <div className="basis-1/12">
-        <img
-          className="rounded-full h-14 pl-1"
-          src={
-            props.userProfilePicture !== ""
-              ? `/assets/${props.userProfilePicture}`
-              : profile
-          }
-        />
-      </div>
-      <div className="flex flex-col basis-11/12 grow-0 w-full">
-        <div>
-          <div
-            className="pl-5"
-            onClick={() => {
-              navigate(`/profile/${props.user}`);
-              navigate(0);
-            }}
-          >
-            <span className="font-bold hover:underline hover:cursor-pointer">
-              {props.name}
-            </span>
-            <span className="text-gray-400 pl-3">{`@${props.user}`}</span>
-          </div>
-          <div
-            className="px-5 break-normal"
-            onClick={() => {
-              navigate(`/post/${props.postId}`);
-              navigate(0);
-            }}
-          >
-            <span className="text-justify">{props.content}</span>
-          </div>
-          <div className="flex flex-row w-full pl-5 h-7">
-            {isLiked ? (
-              <IconContext.Provider value={{ size: "1.1rem", color: "Red" }}>
-                <AiFillHeart onClick={likePostButton} />
-              </IconContext.Provider>
-            ) : (
-              <IconContext.Provider
-                value={{
-                  size: "1.1rem",
-                  color: "#0C1116",
-                  className: "icon-like",
-                }}
-              >
-                <AiOutlineHeart onClick={likePostButton} />
-              </IconContext.Provider>
-            )}
-            <span className="text-xs">{likes}</span>
-            <div className="ml-10 flex flex-row">
-              {renderStars()}
+      {props.isRecommended ? (
+        <span className="text-gray-600 pl-2 pb-2 text-sm">You might like: </span>
+      ) : null}
+      <div className="flex flex-row">
+        <div className="basis-1/12">
+          <img
+            className="rounded-full h-14 pl-1"
+            src={
+              props.userProfilePicture !== ""
+                ? `/assets/${props.userProfilePicture}`
+                : profile
+            }
+          />
+        </div>
+        <div className="flex flex-col basis-11/12 grow-0 w-full">
+          <div>
+            <div
+              className="pl-5"
+              onClick={() => {
+                navigate(`/profile/${props.user}`);
+                navigate(0);
+              }}
+            >
+              <span className="font-bold hover:underline hover:cursor-pointer">
+                {props.name}
+              </span>
+              <span className="text-gray-400 pl-3">{`@${props.user}`}</span>
+            </div>
+            <div
+              className="px-5 break-normal"
+              onClick={() => {
+                navigate(`/post/${props.postId}`);
+                navigate(0);
+              }}
+            >
+              <span className="text-justify">{props.content}</span>
+            </div>
+            <div className="flex flex-row w-full pl-5 h-7">
+              {isLiked ? (
+                <IconContext.Provider value={{ size: "1.1rem", color: "Red" }}>
+                  <AiFillHeart onClick={likePostButton} />
+                </IconContext.Provider>
+              ) : (
+                <IconContext.Provider
+                  value={{
+                    size: "1.1rem",
+                    color: "#0C1116",
+                    className: "icon-like",
+                  }}
+                >
+                  <AiOutlineHeart onClick={likePostButton} />
+                </IconContext.Provider>
+              )}
+              <span className="text-xs">{likes}</span>
+              <div className="ml-10 flex flex-row">{renderStars()}</div>
             </div>
           </div>
+          <CommentContainer
+            postId={props.postId || ""}
+            userId={props.userId || ""}
+            isPagePost={props.isPagePost}
+          />
         </div>
-        <CommentContainer
-          postId={props.postId || ""}
-          userId={props.userId || ""}
-          isPagePost={props.isPagePost}
-        />
       </div>
     </div>
   );

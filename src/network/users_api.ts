@@ -250,16 +250,13 @@ export async function searchUser(
     });
 }
 
-export interface CreateCommentBody{
+export interface CreateCommentBody {
   userId: string;
   postId: string;
   content: string;
 }
 
-export async function createComment(
-  body: CreateCommentBody,
-  token: string,
-){
+export async function createComment(body: CreateCommentBody, token: string) {
   return await axios
     .post(`/api/posts/comment`, body, {
       headers: { Authorization: `Bearer ${token}` },
@@ -304,9 +301,9 @@ export async function getPost(
     });
 }
 
-export interface ratingBody{
-  userId: string,
-  rating: number
+export interface ratingBody {
+  userId: string;
+  rating: number;
 }
 
 export async function setRate(
@@ -318,6 +315,19 @@ export async function setRate(
     .patch(`/api/posts/${postId}/rate`, body, {
       headers: { Authorization: `Bearer ${token}` },
     })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw Error(error);
+    });
+}
+
+export async function getRecommendedPosts(
+  userId: string
+): Promise<string[]> {
+  return await axios
+    .get(`/rc/user/${userId}`)
     .then((response) => {
       return response.data;
     })

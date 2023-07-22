@@ -53,7 +53,6 @@ const CommentContainer = ({ userId, postId, isPagePost }: propsCommentInfo) => {
       setIsLoading(false);
       setComments(comments);
     });
-    console.log("entra");
   }
 
   useEffect(() => {

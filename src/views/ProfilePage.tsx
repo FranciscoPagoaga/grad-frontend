@@ -45,7 +45,7 @@ const ProfilePage = () => {
                 <div className="pb-5" key={i}>
                   <Post
                     postUserId={post.userId}
-                    userId={user?._id}
+                    userId={sessionUser?._id}
                     postId={post._id}
                     name={post.name}
                     user={post.user}
@@ -54,7 +54,7 @@ const ProfilePage = () => {
                     isLiked={post.likes[sessionUser?._id || ""] || false}
                     likes={Object.keys(post.likes).length}
                     isPagePost={false}
-                    rate={post?.rating[user?._id || ""] || 0}
+                    rate={post?.rating[sessionUser?._id || ""] || 0}
                   />
                 </div>
               ))

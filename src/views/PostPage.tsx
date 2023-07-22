@@ -52,7 +52,7 @@ const PostPage = () => {
               isLiked={post?.likes[userId] || false}
               likes={Object.keys(post?.likes || "").length}
               isPagePost={true}
-              rate={post?.rating[userId || ""] || 0}
+              rate={post?.rating[userId] || 0}
             />}
             
           </div>

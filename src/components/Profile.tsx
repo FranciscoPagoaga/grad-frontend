@@ -46,9 +46,7 @@ const Profile = (props: { userId: string | undefined }) => {
   }
 
   async function loadUser() {
-    console.log(props.userId);
     const response = await fetchUser(props.userId || "", token);
-    console.log(response);
     setUser(response);
   }
 
